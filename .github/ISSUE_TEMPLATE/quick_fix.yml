@@ -1,0 +1,73 @@
+name: ⚡ Quick Fix
+description: Report a simple issue that can be fixed quickly (typos, small text changes, minor bugs)
+title: "[Quick Fix]: "
+labels: ["quick-fix", "good-first-issue"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for simple, quick fixes like typos, small text changes, or minor bugs that should take less than 30 minutes to fix.
+        
+  - type: textarea
+    id: quick-fix-description
+    attributes:
+      label: "What needs to be fixed?"
+      description: "Describe the simple issue that needs fixing"
+      placeholder: "Example: Fix typo on activities page - 'Basketbal' should be 'Basketball'"
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: fix-type
+    attributes:
+      label: "Type of quick fix"
+      options:
+        - Typo or spelling error
+        - Incorrect text or wording
+        - Broken link
+        - Small layout issue
+        - Missing punctuation
+        - Color/style tweak
+        - Other minor issue
+    validations:
+      required: true
+      
+  - type: textarea
+    id: location
+    attributes:
+      label: "Where is the issue located?"
+      description: "Specify exactly where on the website this issue appears"
+      placeholder: "Activities page, Basketball activity card, activity title"
+    validations:
+      required: true
+      
+  - type: textarea
+    id: current-incorrect
+    attributes:
+      label: "Current (incorrect) content"
+      description: "Show exactly what it says now"
+      placeholder: "Current: 'Basketbal - Join our team and have fun!'"
+    validations:
+      required: true
+      
+  - type: textarea
+    id: should-be
+    attributes:
+      label: "Should be (correct) content"
+      description: "Show exactly what it should say instead"
+      placeholder: "Should be: 'Basketball - Join our team and have fun!'"
+    validations:
+      required: true
+      
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: "Acceptance Criteria"
+      description: "How will we know this is fixed correctly?"
+      placeholder: |
+        - [ ] Text displays correctly as 'Basketball'
+        - [ ] No other text is accidentally changed
+        - [ ] Change appears on all devices
+    validations:
+      required: true

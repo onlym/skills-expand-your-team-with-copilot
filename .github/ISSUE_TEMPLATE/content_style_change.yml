@@ -1,0 +1,123 @@
+name: 🎨 Content & Style Changes
+description: Request changes to the website's appearance, colors, text, or visual elements
+title: "[Style]: "
+labels: ["design", "content", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to request changes to how the website looks, what text it displays, or visual elements like colors and images.
+        
+  - type: textarea
+    id: change-description
+    attributes:
+      label: "What needs to be changed?"
+      description: "Clearly describe what visual or content changes you want to see"
+      placeholder: "Example: Change the website colors to match our school colors (white and lime green) and add school mascot images."
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: change-type
+    attributes:
+      label: "What type of change is this?"
+      options:
+        - Color scheme/branding
+        - Text content/wording
+        - Images or graphics
+        - Layout/positioning
+        - Fonts or typography
+        - Mobile responsiveness
+        - Accessibility improvements
+        - Other visual changes
+    validations:
+      required: true
+      
+  - type: textarea
+    id: current-state
+    attributes:
+      label: "Current State"
+      description: "Describe how it looks now and what specifically you don't like about it"
+      placeholder: "Currently the website is blue, but our school colors are white and lime green. There are no school mascots visible."
+    validations:
+      required: true
+      
+  - type: textarea
+    id: desired-state
+    attributes:
+      label: "Desired Result"
+      description: "Describe exactly how you want it to look instead"
+      placeholder: "The website should use white and lime green colors throughout. Add mascot images from octodex.github.com in appropriate places."
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: affected-pages
+    attributes:
+      label: "Which pages should be updated?"
+      options:
+        - All pages
+        - Home/activities page only
+        - Individual activity pages
+        - Specific page (describe in requirements)
+        - Navigation/header area
+        - Footer area
+    validations:
+      required: true
+      
+  - type: textarea
+    id: brand-guidelines
+    attributes:
+      label: "Brand Guidelines"
+      description: "Provide specific details about colors, fonts, images, or style requirements"
+      placeholder: |
+        School Colors: 
+        - Primary: Lime Green (#32CD32)
+        - Secondary: White (#FFFFFF)
+        - Accent: Dark Green (#006400)
+        
+        School Mascot: Use images from https://octodex.github.com/
+        
+        Style Notes: Keep it professional but friendly for high school students
+        
+  - type: textarea
+    id: resources
+    attributes:
+      label: "Resources and References"
+      description: "Links to images, color codes, examples, or inspiration for the changes"
+      placeholder: "Link to school website, brand guidelines, example images, color palette tools, etc."
+      
+  - type: checkboxes
+    id: requirements
+    attributes:
+      label: "Requirements"
+      description: "Check all that apply to your request"
+      options:
+        - label: Must work on mobile devices
+        - label: Must meet accessibility standards
+        - label: Should maintain professional appearance
+        - label: Must not affect website functionality
+        - label: Should load quickly (no large images)
+        
+  - type: textarea
+    id: implementation-hints
+    attributes:
+      label: "Implementation Hints"
+      description: "Any technical suggestions about how to make these changes?"
+      placeholder: "Could update the CSS color variables, optimize images for web, consider adding CSS animations, etc."
+      
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: "Acceptance Criteria"
+      description: "How will we know the changes are complete and look correct?"
+      placeholder: |
+        - [ ] All pages use new color scheme (white and lime green)
+        - [ ] School mascot images are displayed appropriately 
+        - [ ] Changes look good on both desktop and mobile
+        - [ ] Text is still readable with new colors
+        - [ ] Website loads at normal speed
+        - [ ] All functionality still works correctly
+    validations:
+      required: true
