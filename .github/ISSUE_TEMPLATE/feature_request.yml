@@ -1,0 +1,108 @@
+name: ✨ Feature Request
+description: Request a new feature or improvement for the activities website
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a new feature! This template helps us understand exactly what you need and how to build it.
+        
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: "Feature Description"
+      description: "Clearly describe the new feature you'd like to see. What should it do?"
+      placeholder: "Example: Add a calendar view so students can see when activities meet and avoid scheduling conflicts."
+    validations:
+      required: true
+      
+  - type: textarea
+    id: user-story
+    attributes:
+      label: "User Story"
+      description: "Describe who will use this feature and why it's important"
+      placeholder: "As a [student/teacher/parent], I want [feature] so that [benefit/reason]"
+    validations:
+      required: true
+      
+  - type: textarea
+    id: current-situation
+    attributes:
+      label: "Current Situation"
+      description: "How do users currently handle this task? What's missing or difficult?"
+      placeholder: "Currently students have to manually check each activity description to see when it meets, which is time-consuming and leads to conflicts."
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: feature-area
+    attributes:
+      label: "What area of the website should this feature be added to?"
+      options:
+        - Activity listing page
+        - Individual activity pages
+        - Student signup process
+        - Navigation/menu
+        - New page/section
+        - Admin/teacher tools
+        - Mobile experience
+        - Other (please specify in description)
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: priority
+    attributes:
+      label: "How important is this feature?"
+      options:
+        - Critical - Students/teachers cannot work effectively without this
+        - High - Would significantly improve daily use
+        - Medium - Would be a nice improvement
+        - Low - Would be nice to have eventually
+    validations:
+      required: true
+      
+  - type: textarea
+    id: detailed-requirements
+    attributes:
+      label: "Detailed Requirements"
+      description: "Break down exactly what this feature needs to include. Be as specific as possible."
+      placeholder: |
+        - Display activities in a monthly calendar format
+        - Show activity name and time for each meeting
+        - Allow clicking on calendar events to see activity details
+        - Filter calendar by activity type or student's registered activities
+        - Work on both desktop and mobile devices
+    validations:
+      required: true
+      
+  - type: textarea
+    id: suggested-implementation
+    attributes:
+      label: "Implementation Hints"
+      description: "Any ideas about how this could be built? What technologies or approaches might work?"
+      placeholder: "Could use a JavaScript calendar library, integrate with existing activity data, add new API endpoints for calendar data."
+      
+  - type: textarea
+    id: limitations-considerations
+    attributes:
+      label: "Limitations and Considerations"
+      description: "What constraints should be considered? Any potential challenges or things to avoid?"
+      placeholder: "Must work with existing activity database, should not slow down page loading, needs to work on mobile devices."
+      
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: "Acceptance Criteria"
+      description: "How will we know this feature is complete and working correctly?"
+      placeholder: |
+        - [ ] Calendar displays current month with all scheduled activities
+        - [ ] Users can navigate between months
+        - [ ] Clicking on activity shows details
+        - [ ] Calendar works on mobile devices
+        - [ ] Page loads quickly with calendar
+        - [ ] No existing functionality is broken
+    validations:
+      required: true

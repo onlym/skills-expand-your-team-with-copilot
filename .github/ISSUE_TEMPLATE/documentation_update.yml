@@ -1,0 +1,115 @@
+name: 📚 Documentation Update
+description: Request updates to documentation, help text, or instructional content
+title: "[Docs]: "
+labels: ["documentation", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to request updates to any documentation, help text, README files, or instructional content.
+        
+  - type: textarea
+    id: documentation-issue
+    attributes:
+      label: "What documentation needs to be updated?"
+      description: "Clearly describe what documentation is outdated, missing, or incorrect"
+      placeholder: "Example: The setup instructions in the README are outdated and don't work with the current version."
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: "What type of documentation is this?"
+      options:
+        - README file
+        - Setup/installation instructions
+        - User guide/how-to
+        - API documentation
+        - Development guide
+        - Help text on website
+        - Comments in code
+        - Other (specify in description)
+    validations:
+      required: true
+      
+  - type: textarea
+    id: current-content
+    attributes:
+      label: "Current Content Issues"
+      description: "What's wrong with the current documentation? Quote specific sections if possible."
+      placeholder: "The current README says to run 'python app.py' but this doesn't work. It should say 'uvicorn app:app --host 0.0.0.0 --port 8000'"
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: target-audience
+    attributes:
+      label: "Who is the target audience for this documentation?"
+      options:
+        - Teachers (non-technical users)
+        - Students using the website
+        - Developers working on the code
+        - System administrators
+        - General users
+        - Mixed audience
+    validations:
+      required: true
+      
+  - type: textarea
+    id: required-updates
+    attributes:
+      label: "Required Updates"
+      description: "List exactly what needs to be added, changed, or removed"
+      placeholder: |
+        - Update installation command from 'python app.py' to 'uvicorn app:app --host 0.0.0.0 --port 8000'
+        - Add section about required Python version (3.8+)
+        - Include troubleshooting section for common startup errors
+        - Add screenshots of the running application
+    validations:
+      required: true
+      
+  - type: textarea
+    id: accuracy-verification
+    attributes:
+      label: "How can we verify the updated information is accurate?"
+      description: "What steps should be taken to test that the new documentation works?"
+      placeholder: "Test the installation steps on a fresh system, verify all commands work as documented, check that screenshots match current interface."
+    validations:
+      required: true
+      
+  - type: checkboxes
+    id: documentation-requirements
+    attributes:
+      label: "Documentation Requirements"
+      description: "Check all that apply"
+      options:
+        - label: Must be written in simple, non-technical language
+        - label: Should include step-by-step instructions
+        - label: Should include screenshots or examples
+        - label: Must be accurate and tested
+        - label: Should follow existing documentation style
+        - label: Must be accessible to non-developers
+        
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: "Additional Context"
+      description: "Any other information that would help with updating the documentation?"
+      placeholder: "Link to related documentation, specific formatting requirements, deadline information, etc."
+      
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: "Acceptance Criteria"
+      description: "How will we know the documentation update is complete and correct?"
+      placeholder: |
+        - [ ] Installation instructions work on fresh system
+        - [ ] All commands and examples are tested and accurate
+        - [ ] Language is appropriate for target audience
+        - [ ] Screenshots are current and helpful
+        - [ ] No broken links or references
+        - [ ] Follows consistent formatting with other documentation
+    validations:
+      required: true

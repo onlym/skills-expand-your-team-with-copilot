@@ -1,0 +1,88 @@
+name: 🐛 Bug Report
+description: Report a problem with the website that isn't working correctly
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report a bug! This template will help us understand the problem and fix it quickly.
+        
+  - type: textarea
+    id: problem-description
+    attributes:
+      label: "Problem Description"
+      description: "Clearly describe what is not working. Be specific about what you expected to happen vs what actually happened."
+      placeholder: "Example: When students try to sign up for Basketball, they get an error message instead of being registered."
+    validations:
+      required: true
+      
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: "Steps to Reproduce"
+      description: "List the exact steps someone can follow to see this problem"
+      placeholder: |
+        1. Go to the activities page
+        2. Click on 'Basketball' activity
+        3. Click 'Sign Up'
+        4. Error appears
+    validations:
+      required: true
+      
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: "Expected Behavior"
+      description: "What should happen instead?"
+      placeholder: "Student should be successfully registered for the activity and see a confirmation message."
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: affected-area
+    attributes:
+      label: "What part of the website is affected?"
+      options:
+        - Activity signup process
+        - Activity listing page
+        - Student login/authentication
+        - Activity display/formatting
+        - Navigation/menu
+        - Mobile view
+        - Other (please specify in description)
+    validations:
+      required: true
+      
+  - type: checkboxes
+    id: browser-tested
+    attributes:
+      label: "Browser Testing"
+      description: "Which browsers have you tested this with?"
+      options:
+        - label: Chrome
+        - label: Firefox
+        - label: Safari
+        - label: Edge
+        - label: Mobile browser
+        
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: "Additional Context"
+      description: "Any other details that might help understand the problem? Screenshots, error messages, etc."
+      placeholder: "Add any screenshots, error messages, or other helpful information here."
+      
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: "Acceptance Criteria"
+      description: "How will we know this bug is fixed? What should work correctly?"
+      placeholder: |
+        - [ ] Students can successfully sign up for activities
+        - [ ] Confirmation message appears after signup
+        - [ ] No error messages during normal signup process
+        - [ ] All browsers work correctly
+    validations:
+      required: true

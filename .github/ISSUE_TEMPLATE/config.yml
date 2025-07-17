@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 General Questions
+    url: https://github.com/onlym/skills-expand-your-team-with-copilot/discussions
+    about: Ask questions or start a discussion about the activities website
+  - name: 🚨 Urgent Issues
+    url: mailto:tech-support@mergington.edu
+    about: For urgent technical issues that affect students immediately
