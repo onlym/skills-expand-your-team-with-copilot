@@ -1,15 +1,108 @@
 """
-MongoDB database configuration and setup for Mergington High School API
+In-memory database for testing without MongoDB
 """
 
-from pymongo import MongoClient
 from argon2 import PasswordHasher
 
-# Connect to MongoDB
-client = MongoClient('mongodb://localhost:27017/')
-db = client['mergington_high']
-activities_collection = db['activities']
-teachers_collection = db['teachers']
+# In-memory storage
+activities_data = {}
+teachers_data = {}
+
+class MemoryCollection:
+    def __init__(self, data_store):
+        self.data_store = data_store
+    
+    def count_documents(self, filter_dict):
+        return len(self.data_store)
+    
+    def insert_one(self, document):
+        key = document.get('_id')
+        if key:
+            self.data_store[key] = {k: v for k, v in document.items() if k != '_id'}
+        return type('Result', (), {'inserted_id': key})()
+    
+    def find_one(self, filter_dict):
+        if '_id' in filter_dict:
+            key = filter_dict['_id']
+            if key in self.data_store:
+                result = {'_id': key}
+                result.update(self.data_store[key])
+                return result
+        return None
+    
+    def find(self, filter_dict):
+        results = []
+        for key, value in self.data_store.items():
+            # Simple filtering logic for activities
+            if self._matches_filter(key, value, filter_dict):
+                result = {'_id': key}
+                result.update(value)
+                results.append(result)
+        return results
+    
+    def _matches_filter(self, key, value, filter_dict):
+        if not filter_dict:
+            return True
+        
+        # Handle schedule_details.days filter
+        if "schedule_details.days" in filter_dict:
+            days_filter = filter_dict["schedule_details.days"]
+            if "$in" in days_filter:
+                target_days = days_filter["$in"]
+                activity_days = value.get("schedule_details", {}).get("days", [])
+                if not any(day in activity_days for day in target_days):
+                    return False
+        
+        # Handle time filters
+        if "schedule_details.start_time" in filter_dict:
+            gte_filter = filter_dict["schedule_details.start_time"]
+            if "$gte" in gte_filter:
+                min_time = gte_filter["$gte"]
+                activity_start = value.get("schedule_details", {}).get("start_time", "00:00")
+                if activity_start < min_time:
+                    return False
+        
+        if "schedule_details.end_time" in filter_dict:
+            lte_filter = filter_dict["schedule_details.end_time"]
+            if "$lte" in lte_filter:
+                max_time = lte_filter["$lte"]
+                activity_end = value.get("schedule_details", {}).get("end_time", "23:59")
+                if activity_end > max_time:
+                    return False
+        
+        return True
+    
+    def aggregate(self, pipeline):
+        # Simple aggregation for getting unique days
+        if len(pipeline) >= 2 and pipeline[0].get("$unwind") == "$schedule_details.days":
+            unique_days = set()
+            for key, value in self.data_store.items():
+                days = value.get("schedule_details", {}).get("days", [])
+                unique_days.update(days)
+            
+            return [{"_id": day} for day in sorted(unique_days)]
+        return []
+    
+    def update_one(self, filter_dict, update_dict):
+        if '_id' in filter_dict:
+            key = filter_dict['_id']
+            if key in self.data_store:
+                if '$push' in update_dict:
+                    for field, value in update_dict['$push'].items():
+                        if field not in self.data_store[key]:
+                            self.data_store[key][field] = []
+                        self.data_store[key][field].append(value)
+                        return type('Result', (), {'modified_count': 1})()
+                elif '$pull' in update_dict:
+                    for field, value in update_dict['$pull'].items():
+                        if field in self.data_store[key] and value in self.data_store[key][field]:
+                            self.data_store[key][field].remove(value)
+                            return type('Result', (), {'modified_count': 1})()
+        return type('Result', (), {'modified_count': 0})()
+
+# Create collections
+activities_collection = MemoryCollection(activities_data)
+teachers_collection = MemoryCollection(teachers_data)
 
 # Methods
 def hash_password(password):
@@ -165,7 +258,7 @@ initial_activities = {
         "participants": ["william@mergington.edu", "jacob@mergington.edu"]
     },
     "Manga Maniacs": {
-        "description": "Dive into the captivating world of Japanese manga! Discover epic adventures, complex characters, and stunning artwork while discussing your favorite series with fellow otaku. From action-packed shonen to heartwarming slice-of-life stories, explore the rich storytelling traditions that have captured hearts worldwide.",
+        "description": "Explore the fantastic stories of the most interesting characters from Japanese Manga (graphic novels).",
         "schedule": "Tuesdays, 7:00 PM - 8:00 PM",
         "schedule_details": {
             "days": ["Tuesday"],
@@ -197,4 +290,3 @@ initial_teachers = [
         "role": "admin"
     }
 ]
-
