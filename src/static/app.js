@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const categoryFilters = document.querySelectorAll(".category-filter");
   const dayFilters = document.querySelectorAll(".day-filter");
   const timeFilters = document.querySelectorAll(".time-filter");
+  const groupBySelect = document.getElementById("group-by-select");
 
   // Authentication elements
   const loginButton = document.getElementById("login-button");
@@ -45,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let searchQuery = "";
   let currentDay = "";
   let currentTimeRange = "";
+  let currentGroupBy = "none";
 
   // Authentication state
   let currentUser = null;
@@ -502,14 +504,150 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Display filtered activities
-    Object.entries(filteredActivities).forEach(([name, details]) => {
-      renderActivityCard(name, details);
+    // Display activities based on grouping preference
+    if (currentGroupBy === "none") {
+      // Display as flat list (original behavior)
+      Object.entries(filteredActivities).forEach(([name, details]) => {
+        renderActivityCard(name, details);
+      });
+    } else {
+      // Display as grouped sections
+      displayGroupedActivities(filteredActivities);
+    }
+  }
+
+  // Function to display activities grouped by specified criteria
+  function displayGroupedActivities(activities) {
+    const groups = {};
+
+    // Group activities based on the selected criteria
+    Object.entries(activities).forEach(([name, details]) => {
+      let groupKey;
+      let groupLabel;
+
+      switch (currentGroupBy) {
+        case "category":
+          groupKey = getActivityType(name, details.description);
+          groupLabel = activityTypes[groupKey].label;
+          break;
+        case "day":
+          if (details.schedule_details && details.schedule_details.days.length > 0) {
+            // For activities with multiple days, create separate entries for each day
+            details.schedule_details.days.forEach(day => {
+              groupKey = day;
+              groupLabel = day;
+              if (!groups[groupKey]) {
+                groups[groupKey] = { label: groupLabel, activities: [] };
+              }
+              groups[groupKey].activities.push([name, details]);
+            });
+            return; // Skip the default grouping below
+          } else {
+            groupKey = "unknown";
+            groupLabel = "Unknown Day";
+          }
+          break;
+        case "time":
+          groupKey = getTimeRangeGroup(details);
+          groupLabel = getTimeRangeLabel(groupKey);
+          break;
+        default:
+          groupKey = "all";
+          groupLabel = "All Activities";
+      }
+
+      if (!groups[groupKey]) {
+        groups[groupKey] = { label: groupLabel, activities: [] };
+      }
+      groups[groupKey].activities.push([name, details]);
+    });
+
+    // Sort groups for consistent display
+    const sortedGroups = Object.entries(groups).sort(([keyA], [keyB]) => {
+      if (currentGroupBy === "day") {
+        // Sort days in week order
+        const dayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        return dayOrder.indexOf(keyA) - dayOrder.indexOf(keyB);
+      } else if (currentGroupBy === "time") {
+        // Sort time ranges in chronological order
+        const timeOrder = ["morning", "afternoon", "evening", "weekend", "unknown"];
+        return timeOrder.indexOf(keyA) - timeOrder.indexOf(keyB);
+      }
+      return keyA.localeCompare(keyB);
+    });
+
+    // Render each group
+    sortedGroups.forEach(([groupKey, groupData]) => {
+      if (groupData.activities.length > 0) {
+        renderActivityGroup(groupData.label, groupData.activities);
+      }
     });
   }
 
-  // Function to render a single activity card
-  function renderActivityCard(name, details) {
+  // Function to determine time range group for an activity
+  function getTimeRangeGroup(details) {
+    if (!details.schedule_details) return "unknown";
+
+    const startTime = details.schedule_details.start_time;
+    const days = details.schedule_details.days;
+
+    // Check if it's a weekend activity
+    if (days.some(day => ["Saturday", "Sunday"].includes(day))) {
+      return "weekend";
+    }
+
+    // Parse time to determine range
+    const [hours] = startTime.split(":").map(num => parseInt(num));
+
+    if (hours < 8) {
+      return "morning"; // Before school
+    } else if (hours >= 15) {
+      return "afternoon"; // After school
+    } else {
+      return "evening"; // Evening/other time
+    }
+  }
+
+  // Function to get human-readable label for time range group
+  function getTimeRangeLabel(timeRange) {
+    const labels = {
+      "morning": "Before School (Before 8:00 AM)",
+      "afternoon": "After School (3:00 PM and later)",
+      "evening": "Evening/Other Times",
+      "weekend": "Weekend Activities",
+      "unknown": "Unknown Time"
+    };
+    return labels[timeRange] || "Unknown Time";
+  }
+
+  // Function to render a group of activities
+  function renderActivityGroup(groupLabel, activities) {
+    const groupContainer = document.createElement("div");
+    groupContainer.className = "activity-group";
+
+    const groupHeader = document.createElement("div");
+    groupHeader.className = "activity-group-header";
+    groupHeader.innerHTML = `
+      ${groupLabel}
+      <span class="activity-group-count">${activities.length}</span>
+    `;
+
+    const groupContent = document.createElement("div");
+    groupContent.className = "activity-group-content";
+
+    // Render each activity in this group
+    activities.forEach(([name, details]) => {
+      const activityCard = createActivityCardElement(name, details);
+      groupContent.appendChild(activityCard);
+    });
+
+    groupContainer.appendChild(groupHeader);
+    groupContainer.appendChild(groupContent);
+    activitiesList.appendChild(groupContainer);
+  }
+
+  // Function to create an activity card element (extracted from renderActivityCard)
+  function createActivityCardElement(name, details) {
     const activityCard = document.createElement("div");
     activityCard.className = "activity-card";
 
@@ -623,6 +761,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    return activityCard;
+  }
+
+  // Function to render a single activity card
+  // Function to render a single activity card (simplified to use createActivityCardElement)
+  function renderActivityCard(name, details) {
+    const activityCard = createActivityCardElement(name, details);
     activitiesList.appendChild(activityCard);
   }
 
@@ -675,6 +820,12 @@ document.addEventListener("DOMContentLoaded", () => {
       currentTimeRange = button.dataset.time;
       fetchActivities();
     });
+  });
+
+  // Add event listener for group by selection
+  groupBySelect.addEventListener("change", (event) => {
+    currentGroupBy = event.target.value;
+    displayFilteredActivities();
   });
 
   // Open registration modal
